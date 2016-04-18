@@ -38,7 +38,7 @@ case "$1" in
 			#echo "ID : $2"
 
 			#create work dir
-			mkdir ${OUT_PUT_DIR}/${WOKR_DIR}
+			mkdir -p ${OUT_PUT_DIR}/${WOKR_DIR}
 
 			#move to git repo
 			cd ${GIT_REPO_DIR}
@@ -74,7 +74,7 @@ case "$1" in
 	if [[ "$2" = '--help' ]]; then
 	  command_usage
 	else
-		${aws} s3 sync  ${GIT_REPO_DIR}/ ${S3_BUCKET_NAME}/ --exclude ".git/*" --exclude ".gitignore"
+		${aws} s3 sync  ${GIT_REPO_DIR}/ ${S3_BUCKET_NAME}/ --exclude ".git/*" --exclude ".gitignore"  --delete
 	fi
 	;;
 
