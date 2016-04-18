@@ -9,7 +9,7 @@ aws="/usr/local/bin/aws --region=${AWS_DEFAULT_REGION}"
 GIT_REPO_DIR='/PATH/TO/YOUR/GIT/REPOSITORY/DIR'
 OUT_PUT_DIR='/PATH/TO/YOUR/WORK/DIR'
 WOKR_DIR='work'
-OUT_PUT_NAME='work'
+OUT_PUT_NAME='www' #set your s3 bucket root dir.
 
 #target commit
 COMMIT_FROM=''
