@@ -1,6 +1,6 @@
 #aws
-AWS_ACCESS_KEY_ID=YOUR_AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY=YOUR_AWS_SECRET_ACCESS_KEY
+export AWS_ACCESS_KEY_ID=YOUR_AWS_ACCESS_KEY_ID
+export AWS_SECRET_ACCESS_KEY=YOUR_AWS_SECRET_ACCESS_KEY
 AWS_DEFAULT_REGION=YOUR_AWS_DEFAULT_REGION
 S3_BUCKET_NAME=s3://YOUR_S3_BUCKET_NAME
 aws="/usr/local/bin/aws --region=${AWS_DEFAULT_REGION}"
@@ -24,7 +24,7 @@ command_usage() {
 }
 
 case "$1" in
-	
+
 	#
 	# sync
 	#
@@ -32,26 +32,26 @@ case "$1" in
 	if [[ "$2" = '--help' ]]; then
 	  command_usage
 	else
-	
+
 		if [[ "$2" ]]; then
 			#echo 'TEST sync'
 			#echo "ID : $2"
 
 			#create work dir
 			mkdir ${OUT_PUT_DIR}/${WOKR_DIR}
-			
+
 			#move to git repo
 			cd ${GIT_REPO_DIR}
-			
+
 			#archive diff
 			git archive --format=zip --prefix=${OUT_PUT_NAME}/ ${COMMIT_TO} `git diff --diff-filter=D --name-only ${COMMIT_TO} $2^` -o ${OUT_PUT_DIR}/${WOKR_DIR}/${OUT_PUT_NAME}.zip
-			
+
 			#unzip
 			unzip -o -q ${OUT_PUT_DIR}/${WOKR_DIR}/${OUT_PUT_NAME}.zip -d ${OUT_PUT_DIR}/${WOKR_DIR}
-			
+
 			#s3 sync
 			${aws} s3 sync  ${OUT_PUT_DIR}/${WOKR_DIR}/${OUT_PUT_NAME}/ ${S3_BUCKET_NAME}/ --exclude ".git/*" --exclude ".gitignore" --exclude ".DS_Store" --exclude "*myconfig.php"
-			
+
 			#clean
 			rm -rf ${OUT_PUT_DIR}/${WOKR_DIR}
 
@@ -63,17 +63,17 @@ case "$1" in
 			echo ''
 
 		fi
-		
+
 	fi
 	;;
-	
+
 	#
 	# sync-all
 	#
 	'sync-all' )
 	if [[ "$2" = '--help' ]]; then
 	  command_usage
-	else	
+	else
 		${aws} s3 sync  ${GIT_REPO_DIR}/ ${S3_BUCKET_NAME}/ --exclude ".git/*" --exclude ".gitignore"
 	fi
 	;;
