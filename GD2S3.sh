@@ -23,6 +23,10 @@ command_usage() {
 	echo "    sync-all  GIT_REPO_DIR sync to Target S3 BUCKET (All Files)"
 }
 
+sync_clean() {
+  ${aws} s3 sync  ${GIT_REPO_DIR}/ ${S3_BUCKET_NAME}/ --exclude ".git/*" --exclude ".gitignore"  --delete
+}
+
 case "$1" in
 
 	#
@@ -54,6 +58,7 @@ case "$1" in
 
 			#clean
 			rm -rf ${OUT_PUT_DIR}/${WOKR_DIR}
+      sync_clean
 
 		else
 
