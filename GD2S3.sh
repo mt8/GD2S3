@@ -15,6 +15,9 @@ OUT_PUT_NAME='www' #set your s3 bucket root dir.
 COMMIT_FROM=''
 COMMIT_TO='HEAD'
 
+## Check AWS CLI
+which aws || exit 2
+
 command_usage() {
  	echo "Usage: git_deploy_to_s3.sh [arg...]"
 	echo ''
