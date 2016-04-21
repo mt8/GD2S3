@@ -11,9 +11,8 @@ OUT_PUT_DIR='/PATH/TO/YOUR/WORK/DIR'
 WOKR_DIR='work'
 OUT_PUT_NAME='www' #set your s3 bucket root dir.
 
-#target commit
-COMMIT_FROM=''
-COMMIT_TO='HEAD'
+#base commit id
+BASE_COMMIT='HEAD^'
 
 ## Check AWS CLI
 which aws || exit 2
@@ -51,13 +50,13 @@ case "$1" in
 			cd ${GIT_REPO_DIR}
 
 			#archive diff
-			git archive --format=zip --prefix=${OUT_PUT_NAME}/ ${COMMIT_TO} `git diff --diff-filter=D --name-only ${COMMIT_TO} $2^` -o ${OUT_PUT_DIR}/${WOKR_DIR}/${OUT_PUT_NAME}.zip
+			git archive --format=zip --prefix=${OUT_PUT_NAME}/ ${BASE_COMMIT} `git diff --diff-filter=M --name-only ${BASE_COMMIT} $2` -o ${OUT_PUT_DIR}/${WOKR_DIR}/${OUT_PUT_NAME}.zip
 
 			#unzip
 			unzip -o -q ${OUT_PUT_DIR}/${WOKR_DIR}/${OUT_PUT_NAME}.zip -d ${OUT_PUT_DIR}/${WOKR_DIR}
 
 			#s3 sync
-			${aws} s3 sync  ${OUT_PUT_DIR}/${WOKR_DIR}/${OUT_PUT_NAME}/ ${S3_BUCKET_NAME}/ --exclude ".git/*" --exclude ".gitignore" --exclude ".DS_Store" --exclude "*myconfig.php"
+			${aws} s3 sync  ${OUT_PUT_DIR}/${WOKR_DIR}/${OUT_PUT_NAME}/ ${S3_BUCKET_NAME}/ --exclude ".git/*" --exclude ".gitignore" --exclude ".DS_Store"
 
 			#clean
 			rm -rf ${OUT_PUT_DIR}/${WOKR_DIR}
