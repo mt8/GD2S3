@@ -12,7 +12,7 @@
   OUT_PUT_NAME='www' #set your s3 bucket root dir.
 
   #base commit id
-  BASE_COMMIT='HEAD^'
+  BASE_COMMIT='HEAD'
   
   ## Check AWS CLI
   which aws || exit 2
@@ -50,7 +50,7 @@
         cd ${GIT_REPO_DIR}
 
         #archive diff
-        git archive --format=zip --prefix=${OUT_PUT_NAME}/ HEAD `git diff --diff-filter=D --name-only $2 ${BASE_COMMIT}` -o ${OUT_PUT_DIR}/${WOKR_DIR}/${OUT_PUT_NAME}.zip
+        git archive --format=zip --prefix=${OUT_PUT_NAME}/ HEAD `git diff --diff-filter=D --name-only ${BASE_COMMIT} $2` -o ${OUT_PUT_DIR}/${WOKR_DIR}/${OUT_PUT_NAME}.zip
 
         #unzip
         unzip -o -q ${OUT_PUT_DIR}/${WOKR_DIR}/${OUT_PUT_NAME}.zip -d ${OUT_PUT_DIR}/${WOKR_DIR}
