@@ -13,7 +13,7 @@
 
   #base commit id
   BASE_COMMIT='HEAD^'
-
+  
   ## Check AWS CLI
   which aws || exit 2
 
@@ -26,7 +26,7 @@
   }
 
   sync_clean() {
-    ${aws} s3 sync  ${GIT_REPO_DIR}/ ${S3_BUCKET_NAME}/ --exclude ".git/*" --exclude ".gitignore"  --delete
+    ${aws} s3 sync  ${GIT_REPO_DIR}/ ${S3_BUCKET_NAME}/ --exclude ".git/*" --exclude ".gitignore" --exclude ".DS_Store" --delete
   }
 
   case "$1" in
@@ -50,17 +50,17 @@
         cd ${GIT_REPO_DIR}
 
         #archive diff
-        git archive --format=zip --prefix=${OUT_PUT_NAME}/ ${BASE_COMMIT} `git diff --diff-filter=M --name-only ${BASE_COMMIT} $2` -o ${OUT_PUT_DIR}/${WOKR_DIR}/${OUT_PUT_NAME}.zip
+        git archive --format=zip --prefix=${OUT_PUT_NAME}/ HEAD `git diff --diff-filter=D --name-only $2 ${BASE_COMMIT}` -o ${OUT_PUT_DIR}/${WOKR_DIR}/${OUT_PUT_NAME}.zip
 
         #unzip
         unzip -o -q ${OUT_PUT_DIR}/${WOKR_DIR}/${OUT_PUT_NAME}.zip -d ${OUT_PUT_DIR}/${WOKR_DIR}
 
         #s3 sync
-        ${aws} s3 sync  ${OUT_PUT_DIR}/${WOKR_DIR}/${OUT_PUT_NAME}/ ${S3_BUCKET_NAME}/ --exclude ".git/*" --exclude ".gitignore" --exclude ".DS_Store"
+        ${aws} s3 sync ${OUT_PUT_DIR}/${WOKR_DIR}/${OUT_PUT_NAME}/ ${S3_BUCKET_NAME}/ --exclude ".git/*" --exclude ".gitignore" --exclude ".DS_Store"
 
         #clean
         rm -rf ${OUT_PUT_DIR}/${WOKR_DIR}
-        sync_clean
+        #sync_clean
 
       else
 
@@ -81,7 +81,7 @@
     if [[ "$2" = '--help' ]]; then
       command_usage
     else
-      ${aws} s3 sync  ${GIT_REPO_DIR}/ ${S3_BUCKET_NAME}/ --exclude ".git/*" --exclude ".gitignore"  --delete
+      ${aws} s3 sync  ${GIT_REPO_DIR}/ ${S3_BUCKET_NAME}/ --exclude ".git/*" --exclude ".gitignore" --exclude ".DS_Store" --delete
     fi
     ;;
 
